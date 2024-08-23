@@ -14,8 +14,9 @@ export default function ShelfDetails(props: { shelf: Shelf }) {
 
     return (
         <>
-            <input type="text" className="text-3xl font-semibold text-emerald-950 bg-transparent rounded" defaultValue={props.shelf.name}/>
-            <textarea className="resize-none rounded p-2 bg-emerald-300 text-emerald-950"
+            <input type="text" className="text-3xl font-semibold text-emerald-950 bg-transparent rounded"
+                   defaultValue={props.shelf.name}/>
+            <textarea className="resize-none rounded p-2 bg-emerald-300 text-emerald-950 h-32"
                       placeholder="Description"
                       defaultValue={props.shelf.description}
             />

@@ -4,12 +4,12 @@ import {useEffect} from "react";
 import ItemSpine from "@/components/shelf/ItemSpine";
 import {Item} from "@/types";
 import {ObjectId} from "bson";
+import {debounce} from "next/dist/server/utils";
 
-export default function Bookshelf(props: { shelfID: ObjectId, items: Item[] }) {
+export default function Bookshelf(props: { shelfID: ObjectId, items: Item[], setFocusedItem: Function }) {
 
-    // TODO: 1. Add functionality to drag and drop new items when they are added without refresh
-    // TODO: 2. Make it so updateItemOrder is only called upon the user dropping the item on the page, and not whenever a swap occurs.
-    // both probably need new features from swapy
+    // TODO: Add functionality to drag and drop new items when they are added without refresh
+    // needs swapy update (or just a different drag and drop tool)
 
     const updateItemOrder = async (itemOrder: string[]) => {
         await fetch(`/api/shelves/${props.shelfID}`, {
@@ -20,26 +20,25 @@ export default function Bookshelf(props: { shelfID: ObjectId, items: Item[] }) {
         });
     }
 
+    const handleSwap = (data: any) => {
+        const reorderedItemIDs =
+            Object.keys(data.object).map(
+                key => data.object[key]!
+            );
+        updateItemOrder(reorderedItemIDs);
+    }
+    const debouncedHandleSwap = debounce(handleSwap, 1000); // so i dont murder the backend
+
     useEffect(() => {
 
         const container = document.querySelector('#bookshelf');
-        const initSwapy = () => {
-            if (container) {
-                const swapy = createSwapy(container, {
-                    animation: 'none' // animations can be laggy with a lot of items
-                });
-                swapy.onSwap(({ data }) => {
-                    const reorderedItemIDs =
-                        Object.keys(data.object).map(
-                            key => data.object[key]!
-                        );
-                    console.log(reorderedItemIDs);
-                    updateItemOrder(reorderedItemIDs);
-                });
-            }
-        }
 
-        if (props.items.length != 0) initSwapy();
+        if ((props.items.length != 0) && container) {
+            const swapy = createSwapy(container, {
+                animation: 'none' // animations get laggy with a lot of items
+            });
+            swapy.onSwap(({ data }) => debouncedHandleSwap(data));
+        }
 
     }, [props.items]);
 
@@ -49,7 +48,7 @@ export default function Bookshelf(props: { shelfID: ObjectId, items: Item[] }) {
              id="bookshelf">
 
             {props.items.map((item, idx) => (
-                <ItemSpine item={item} idx={idx} key={idx} />
+                <ItemSpine item={item} idx={idx} key={idx} setFocusedItem={props.setFocusedItem} />
             ))}
 
         </div>
