@@ -21,7 +21,7 @@ export default function CreateShelfSidebarOption() {
 
     return (
         <>
-            <a className="block px-2 border-emerald-950 border-b-2 hover:bg-emerald-700"
+            <a className="block px-2 border-emerald-950 border-b-2 hover:bg-emerald-700 cursor-pointer"
                onClick={showModal}>+ Add new shelf</a>
             <dialog ref={modalRef} id="shelfModal" className="bg-transparent w-1/3 h-1/2">
                 <CreateShelfForm closeModal={closeModal}/>

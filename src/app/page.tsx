@@ -5,7 +5,7 @@ export default function Home() {
     return (
         <article className="p-2">
             <h1>Home Page</h1>
-            <CreateShelfForm/>
+            <CreateShelfForm closeModal={null}/>
         </article>
     );
 }

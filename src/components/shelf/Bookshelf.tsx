@@ -26,7 +26,7 @@ export default function Bookshelf(props: { shelfID: ObjectId, items: Item[] }) {
         const initSwapy = () => {
             if (container) {
                 const swapy = createSwapy(container, {
-                    animation: 'dynamic'
+                    animation: 'none' // animations can be laggy with a lot of items
                 });
                 swapy.onSwap(({ data }) => {
                     const reorderedItemIDs =
@@ -45,7 +45,7 @@ export default function Bookshelf(props: { shelfID: ObjectId, items: Item[] }) {
 
 
     return (
-        <div className="bg-emerald-200 p-2 rounded flex w-full flex-row gap-1 min-h-fit flex-wrap items-end justify-start gap-x-0.5 gap-y-8"
+        <div className="bg-emerald-200 p-2 rounded flex w-full flex-row gap-1 min-h-52 flex-wrap items-end justify-start gap-x-0.5 gap-y-8"
              id="bookshelf">
 
             {props.items.map((item, idx) => (
