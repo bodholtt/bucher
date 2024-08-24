@@ -32,20 +32,20 @@ body {
     }
 }
 
-form {
-    @apply bg-emerald-700 flex flex-col gap-2 p-4 rounded-lg;
+.customized-form {
+    @apply bg-emerald-700 flex flex-col gap-2;
 }
 
-form label {
+.customized-form label {
     @apply text-xl text-emerald-50;
 }
 
-form input {
+.customized-form input {
     @apply rounded text-emerald-950 px-2;
 }
 
 button {
-    @apply rounded border-emerald-950 border-2 bg-emerald-700 text-emerald-50 px-2;
+    @apply rounded border-emerald-950 border-2 bg-emerald-700 hover:bg-emerald-600 active:bg-emerald-800 text-emerald-50 px-2;
 }
 
 dialog::backdrop {

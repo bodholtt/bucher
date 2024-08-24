@@ -1,6 +1,6 @@
 import {Shelf, InputShelf} from "@/types";
 import dbConnect from "@/db/dbConnect";
-import {ShelfModel} from "@/db/schema";
+import {ItemModel, ShelfModel} from "@/db/schema";
 import {revalidateTag} from "next/cache";
 import {Types as MongooseTypes} from "mongoose";
 import {ObjectId} from "bson";
@@ -41,6 +41,23 @@ export async function DELETE(
     { params }: { params: { slug: string } })
 {
     await dbConnect();
+
+    let s;
+    try {
+        s = await ShelfModel.findById(params.slug)
+    } catch (err) {
+        return new Response(null, {
+            status: 404
+        })
+    }
+
+    const ids = s.items;
+    if (ids || ids.length != 0) {
+        await ItemModel.deleteMany({
+            '_id': { $in: ids }
+        }).then(i => console.log(i));
+    }
+
     await ShelfModel.findByIdAndDelete(params.slug);
 
     revalidateTag('sidebar');

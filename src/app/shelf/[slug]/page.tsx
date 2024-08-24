@@ -62,7 +62,9 @@ export default function ShelfPage({ params }: { params: { slug: string } }) {
                 { activeShelf && items ?
                     <>
                         <Bookshelf shelfID={activeShelf._id!} items={items} setFocusedItem={setFocusedItem}/>
-                        <CreateItemForm shelfID={activeShelf._id!} addItem={addItem}/>
+                        <div className="flex items-start">
+                            <CreateItemForm shelfID={activeShelf._id!} addItem={addItem}/>
+                        </div>
                     </>
                     :
                     <BookshelfSkeleton/>
@@ -71,10 +73,11 @@ export default function ShelfPage({ params }: { params: { slug: string } }) {
 
             <div className="bg-emerald-200 rounded p-2 flex flex-col gap-2 max-w-full overflow-x-hidden overflow-y-auto">
                 {activeShelf ?
+
                     (focusedItem ?
                         <ItemDetails item={focusedItem}/>
                         :
-                        <ShelfDetails shelf={activeShelf}/>
+                        <ShelfDetails shelf={activeShelf} setActiveShelf={setActiveShelf} key={activeShelf.name}/>
                     )
                     :
                     <DetailsSkeleton/>

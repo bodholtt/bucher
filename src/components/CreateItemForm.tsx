@@ -27,7 +27,7 @@ export default function CreateItemForm(props: { shelfID: ObjectId, addItem: Func
     }
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} className="customized-form p-4 rounded">
             <label>Create New Item</label>
             <input type="text" name="name" required placeholder="Item name"/>
             <button type="submit">Submit</button>
