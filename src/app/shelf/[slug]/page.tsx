@@ -16,11 +16,17 @@ export default function ShelfPage({ params }: { params: { slug: string } }) {
     const [focusedItem, setFocusedItem] = useState<Item | null>(null);
     const [items, setItems] = useState<Item[] | null>(null);
 
+    const [refresh, setRefresh] = useState(1);
+
     const [noShelfFound, setNoShelfFound] = useState(false);
 
+    const toggleRefresh = () => {
+        setRefresh(-refresh);
+    }
+
     const addItem = (i: Item) => {
-        if (!items) setItems([i])
-        else setItems(items => [...items!, i])
+        if (!items) setItems([i]);
+        else setItems(items => [...items!, i]);
     }
 
     const getItems = async () => {
@@ -33,14 +39,14 @@ export default function ShelfPage({ params }: { params: { slug: string } }) {
     useEffect(() => {
 
         const getShelf = async () => {
-            const res = await fetch(`${API_URL}/shelves/${params.slug}`)
+            const res = await fetch(`${API_URL}/shelves/${params.slug}`);
             if (!res.ok) return;
             const shelf: Shelf = (await res.json()).data;
             return shelf;
         }
 
         getShelf().then(s => {
-            if (s) setActiveShelf(s)
+            if (s) setActiveShelf(s);
             else setNoShelfFound(true);
         });
         getItems().then(i => setItems(i));
@@ -50,7 +56,7 @@ export default function ShelfPage({ params }: { params: { slug: string } }) {
     useEffect(() => {
 
 
-    }, [focusedItem])
+    }, [items, focusedItem])
 
     if (noShelfFound)
         return notFound();
@@ -61,7 +67,7 @@ export default function ShelfPage({ params }: { params: { slug: string } }) {
             <div className="flex flex-col gap-2 max-w-full">
                 { activeShelf && items ?
                     <>
-                        <Bookshelf shelfID={activeShelf._id!} items={items} setFocusedItem={setFocusedItem}/>
+                        <Bookshelf key={refresh} shelfID={activeShelf._id!} items={items} setFocusedItem={setFocusedItem}/>
                         <div className="flex items-start">
                             <CreateItemForm shelfID={activeShelf._id!} addItem={addItem}/>
                         </div>
@@ -75,7 +81,8 @@ export default function ShelfPage({ params }: { params: { slug: string } }) {
                 {activeShelf ?
 
                     (focusedItem ?
-                        <ItemDetails item={focusedItem}/>
+                        <ItemDetails item={focusedItem} key={focusedItem.name} shelfID={params.slug}
+                                     toggleRefresh={toggleRefresh} setFocusedItem={setFocusedItem}/>
                         :
                         <ShelfDetails shelf={activeShelf} setActiveShelf={setActiveShelf} key={activeShelf.name}/>
                     )

@@ -24,7 +24,7 @@ export type InputShelf = {
  */
 export type Item = {
     _id?: ObjectId
-    name: string
+    name?: string
     description?: string
     spineColor?: string
     textColor?: string

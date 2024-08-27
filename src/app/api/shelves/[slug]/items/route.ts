@@ -65,7 +65,27 @@ export async function POST(
 /**
  * Delete shelf items from a list of Object IDs
  */
-export async function DELETE() {
+export async function DELETE(
+    request: Request,
+    { params }: { params: { slug: string } })
+{
+    const data: string[] = await request.json();
+
+    // const s = await GetShelf(params.slug);
+    // if (!s) return new Response(null, {status: 404});
+    //
+    // const ids = s.items;
+    // if (ids) {
+    //     await ItemModel.deleteMany({
+    //         '_id': { $in: data }
+    //     }).then(i => console.log(i));
+    // }
+
+    // get shelf
+    // delete items by request
+    // remove ids from shelf
+    // save shelf
+
     return new Response(JSON.stringify("Not implemented"), {
         status: 500
     })

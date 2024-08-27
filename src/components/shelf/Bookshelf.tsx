@@ -4,40 +4,43 @@ import {useEffect} from "react";
 import ItemSpine from "@/components/shelf/ItemSpine";
 import {Item} from "@/types";
 import {ObjectId} from "bson";
-import {debounce} from "next/dist/server/utils";
 
 export default function Bookshelf(props: { shelfID: ObjectId, items: Item[], setFocusedItem: Function }) {
 
     // TODO: Add functionality to drag and drop new items when they are added without refresh
     // needs swapy update (or just a different drag and drop tool)
 
-    const updateItemOrder = async (itemOrder: string[]) => {
+    const updateOrderBackend = async (itemIDs: string[]) => {
         await fetch(`/api/shelves/${props.shelfID}`, {
             body: JSON.stringify({
-                items: itemOrder
+                items: itemIDs
             }),
             method: "PUT",
         });
     }
 
     const handleSwap = (data: any) => {
-        const reorderedItemIDs =
+        const reorderedItemIDs: string[] =
             Object.keys(data.object).map(
                 key => data.object[key]!
             );
-        updateItemOrder(reorderedItemIDs);
+
+        updateOrderBackend(reorderedItemIDs);
     }
-    const debouncedHandleSwap = debounce(handleSwap, 1000); // so i dont murder the backend
 
     useEffect(() => {
 
         const container = document.querySelector('#bookshelf');
 
         if ((props.items.length != 0) && container) {
+
+            // swapping is buggy when an item has its details changed
+
             const swapy = createSwapy(container, {
-                animation: 'none' // animations get laggy with a lot of items
+                animation: 'none', // animations get laggy with a lot of items
+                continuousMode: false // no point in tracking while user still holding item
             });
-            swapy.onSwap(({ data }) => debouncedHandleSwap(data));
+            swapy.onSwap(({ data }) => handleSwap(data));
         }
 
     }, [props.items]);
@@ -48,7 +51,7 @@ export default function Bookshelf(props: { shelfID: ObjectId, items: Item[], set
              onDoubleClick={() => props.setFocusedItem(null)}>
 
             {props.items.map((item, idx) => (
-                <ItemSpine item={item} idx={idx} key={idx} setFocusedItem={props.setFocusedItem} />
+                <ItemSpine item={item} idx={idx} key={item._id!.toString()} setFocusedItem={props.setFocusedItem} />
             ))}
 
             {props.items.length == 0 && (

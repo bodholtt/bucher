@@ -42,17 +42,11 @@ export async function DELETE(
 {
     await dbConnect();
 
-    let s;
-    try {
-        s = await ShelfModel.findById(params.slug)
-    } catch (err) {
-        return new Response(null, {
-            status: 404
-        })
-    }
+    const s = await GetShelf(params.slug);
+    if (!s) return new Response(null, {status: 404});
 
     const ids = s.items;
-    if (ids || ids.length != 0) {
+    if (ids) {
         await ItemModel.deleteMany({
             '_id': { $in: ids }
         }).then(i => console.log(i));
@@ -73,7 +67,7 @@ export async function PUT(
 {
 
     const iShelf: InputShelf = await request.json();
-    console.log(iShelf)
+    // console.log(iShelf)
 
     let ids: ObjectId[] = [];
     if (iShelf.items) {
