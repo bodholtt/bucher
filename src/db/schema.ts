@@ -18,5 +18,6 @@ const itemSchema = new mongoose.Schema({
     description: { type: String, required: false },
     spineColor: { type: String, required: false }, // hex code
     textColor: { type: String, required: false }, // hex code
+    format: { type: String, required: false },
 })
 export const ItemModel = mongoose.models.Item ?? mongoose.model('Item', itemSchema);

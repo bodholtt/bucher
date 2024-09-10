@@ -67,7 +67,7 @@ export default function ShelfPage({ params }: { params: { slug: string } }) {
             <div className="flex flex-col gap-2 max-w-full">
                 { activeShelf && items ?
                     <>
-                        <Bookshelf key={refresh} shelfID={activeShelf._id!} items={items} setFocusedItem={setFocusedItem}/>
+                        <Bookshelf key={refresh} shelf={activeShelf} items={items} setFocusedItem={setFocusedItem}/>
                         <div className="flex items-start">
                             <CreateItemForm shelfID={activeShelf._id!} addItem={addItem}/>
                         </div>

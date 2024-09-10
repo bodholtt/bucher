@@ -26,10 +26,17 @@ export type Item = {
     _id?: ObjectId
     name?: string
     description?: string
-    spineColor?: string
-    textColor?: string
+    format?: string
+    spineColor?: string | undefined | null // null to reset
+    textColor?: string | undefined | null // null to reset
     images?: string
 }
+
+export const formats = [
+    "Book", "Paperback", "Hardcover", "Magazine",
+    "DVD", "Blu-ray", "CD",
+    "Cassette", "VHS",
+]
 
 // export type ImageList = {
 //     spine: string | null;

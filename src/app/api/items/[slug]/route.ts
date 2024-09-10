@@ -32,7 +32,7 @@ export async function PUT(
     await dbConnect();
     await ItemModel.findByIdAndUpdate(params.slug, iItem);
 
-    return new Response(JSON.stringify("Not implemented"), {
+    return new Response(null, {
         status: 200
     });
 }
